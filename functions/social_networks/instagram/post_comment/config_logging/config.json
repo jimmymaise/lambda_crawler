@@ -1,0 +1,14 @@
+{
+  "environment": "dev",
+  "region": "us-west-2",
+  "memory_size": 500,
+  "deployment_bucket_name": "aduro-data-dev",
+  "lambda_external_configurations": {
+    "helloFuncRole": "arn:aws:iam::762035899142:role/lambda_execution_role_dev",
+    "sampleETLStateMachineRole": "arn:aws:iam::762035899142:role/Step_function_default"
+  },
+  "timeout": 20,
+  "comment_query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5",
+  "max_num_comments": 50,
+  "default_num_comments": 12
+}
