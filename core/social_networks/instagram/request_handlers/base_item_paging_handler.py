@@ -9,7 +9,6 @@ from core.utils.common import Common
 
 
 class BaseItemPagingHandler(object, metaclass=ABCMeta):
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def __init__(self):

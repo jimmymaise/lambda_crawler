@@ -2,7 +2,7 @@ import time
 
 from marshmallow import Schema, fields, pre_load, EXCLUDE
 
-from core.constants.base_instagram_constant import LambdaResquestConst
+from core.constants.base_instagram_constant import LambdaRequestConst
 
 
 class PagingCommentUrlOptionsSchema(Schema):
@@ -64,5 +64,5 @@ class IGCommentPaginateRequestSchema(Schema):
 
     @pre_load
     def process_data_fields(self, data, **kwargs):
-        data.update(data.get(LambdaResquestConst.DATA_FIELDS, {}))
+        data.update(data.get(LambdaRequestConst.DATA_FIELDS, {}))
         return data

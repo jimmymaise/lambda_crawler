@@ -4,8 +4,8 @@ import os
 
 from core.constants.core_constant import CoreConst
 
-etl_folder_path = None
-etl_config = None
+function_folder_path = None
+function_config = None
 
 
 class BaseConfig:
@@ -18,26 +18,26 @@ class BaseConfig:
         return os.getenv('ENV', '').upper() == 'LOCAL'
 
     @classmethod
-    def init_config(cls, etl_path):
-        global etl_config
-        global etl_folder_path
-        etl_folder_path = etl_path
-        etl_const_config_path = os.path.join(etl_path, CoreConst.CONFIG_FILE_PATH)
-        with open(etl_const_config_path, 'r') as const_config_file:
+    def init_config(cls, function_path):
+        global function_config
+        global function_folder_path
+        function_folder_path = function_path
+        function_const_config_path = os.path.join(function_path, CoreConst.CONFIG_FILE_PATH)
+        with open(function_const_config_path, 'r') as const_config_file:
             const_config_str = const_config_file.read()
-            etl_config = json.loads(const_config_str)
+            function_config = json.loads(const_config_str)
         return cls.get_config()
 
     @staticmethod
     def get_config():
-        global etl_config
-        if not etl_config:
+        global function_config
+        if not function_config:
             raise ValueError('Need to init config')
-        return copy.deepcopy(etl_config)
+        return copy.deepcopy(function_config)
 
     @staticmethod
-    def get_etl_folder_path():
-        global etl_folder_path
-        if not etl_folder_path:
-            raise ValueError('Cannot get etl folder path')
-        return etl_folder_path
+    def get_function_folder_path():
+        global function_folder_path
+        if not function_folder_path:
+            raise ValueError('Cannot get function folder path')
+        return function_folder_path

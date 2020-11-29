@@ -13,5 +13,6 @@ class CommentPagingHandler(BaseItemPagingHandler):
 
     def get_request_url(self, url_options):
         request_url = CommentConst.COMMENT_URL_NO_CURSOR.format(
-            **url_options) if not url_options[CommentConst.CURSOR] else CommentConst.COMMENT_URL_WITH_CURSOR.format(**url_options)
+            **url_options) if not url_options[CommentConst.CURSOR] else CommentConst.COMMENT_URL_WITH_CURSOR.format(
+            **url_options)
         return request_url

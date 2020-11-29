@@ -1,13 +1,22 @@
 class CoreConst:
+    TOP_LEVEL_SCOPE = '__main__'
     LOG_FORMAT = '%(asctime)s - %(name)s: [%(levelname)s]: %(message)s'
-    BASE_INSTAGRAM_PAGING_URL = 'https://www.instagram.com/graphql/query/?query_hash={query_hash}&variables='
-    COMMENT_URL_NO_CURSOR = BASE_INSTAGRAM_PAGING_URL + '{{"shortcode": "{shortcode}", "first": {num_item}}}'
-    COMMENT_URL_WITH_CURSOR = BASE_INSTAGRAM_PAGING_URL + '{{"shortcode": "{shortcode}", "first": {num_item},' \
-                                                          '"after":"{cursor}"}}'
     CONFIG_FILE_PATH = 'config_logging/config.json'
+    FUNC_ID = 'func_id'
+    RELATIVE_FUNC = 'relative_func'
+    RELATIVE_FUNCTION_PATH_VAR = 'relative_function_path'
+    RELATIVE_AWS_TEMPLATE_PATH = '/functions/serverless_templates/aws_serverless_template.yml'
+
+    WRITE_MODE = 'w'
+
+    SERVERLESS_DEFAULT_FILE_NAME = 'serverless.yml'
+    REQUIREMENT_DEFAULT_FILE_NAME = 'requirements.txt'
+
     COMMENT_RESOURCE_TYPE = 'COMMENT'
     POST_RESOURCE_TYPE = 'POST'
 
-    BASE_INSTAGRAM_GET_ONE_ITEM_DETAIL_URL = 'https://www.instagram.com/{item_id}/?__a=1'
-
+    # Third party Notifications
     SLACK_NOTIFICATION_HOOK_URL = "https://hooks.slack.com/services/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"
+
+    # Exception
+    NOT_A_FILE_ERROR_MESSAGE = 'NotAFile'

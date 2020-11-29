@@ -13,14 +13,14 @@ from functions.social_networks.instagram.post_comment.request_handlers.comment_p
 from functions.social_networks.instagram.post_comment.schemas.comment_paging_schema import \
     IGCommentPaginateRequestSchema, PagingCommentUrlOptionsSchema, PagingCommentRequestOptionsSchema
 
-etl_path = str(Path(__file__).resolve().parents[1])
+function_path = str(Path(__file__).resolve().parents[1])
 
 
 class MainStep:
     def __init__(self, event, context):
         self.event = event
         self.context = context
-        self.config = Config.init_config(etl_path=etl_path)
+        self.config = Config.init_config(function_path=function_path)
         self.paging_handler = CommentPagingHandler()
         self.comment_request_body = IGCommentPaginateRequestSchema().load(self.event)
 
@@ -52,6 +52,7 @@ def lambda_handler(event, context):
 
 
 if __name__ == '__main__':
+    # Just for testing. Remove it
     event_test = {"data_fields": {"shortcode": 'CEiuPKTF9cA',
                                   "cursor": "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA==",
                                   "num_item": 15},
