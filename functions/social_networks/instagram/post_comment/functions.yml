@@ -1,7 +1,7 @@
 hello:
   role: "${self:custom.externalConfigurations.comment_func_role}"
   name: ${self:provider.stage}-${self:service}-ig_comment_crawler
-  handler: ${self:custom.externalConfigurations.relative_function_path}/main_step.lambda_handler
+  handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
   #description: Description of what the lambda function does # optional, Description to publish to AWS
   #runtime: python3.8 # optional overwrite, default is provider runtime
   #memorySize: 512 # optional, in MB, default is 1024
