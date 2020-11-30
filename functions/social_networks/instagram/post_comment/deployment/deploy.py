@@ -1,10 +1,10 @@
 import sys
 from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parents[5]))
 
 from core.deployment.base_deploy_handler import BaseDeployHandler
 from functions.social_networks.instagram.post_comment.config_logging.config_handler import Config
 
-sys.path.append(str(Path(__file__).resolve().parents[4]))
 function_path = str(Path(__file__).resolve().parents[1])
 
 
