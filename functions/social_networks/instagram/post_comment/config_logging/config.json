@@ -7,7 +7,5 @@
     "comment_func_role": "arn:aws:iam::762035899142:role/lambda_execution_role_dev"
   },
   "timeout": 20,
-  "comment_query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5",
-  "max_num_comments": 50,
-  "default_num_comments": 12
+  "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
 }

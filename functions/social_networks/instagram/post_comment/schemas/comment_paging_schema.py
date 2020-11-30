@@ -61,6 +61,7 @@ class IGCommentPaginateRequestSchema(Schema):
     cookies = fields.Dict()
     cursor = fields.Str(allow_none=True)
     num_item = fields.Int()
+    query_hash = fields.Str()
 
     @pre_load
     def process_data_fields(self, data, **kwargs):

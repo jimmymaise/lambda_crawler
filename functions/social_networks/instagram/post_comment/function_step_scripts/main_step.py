@@ -2,10 +2,8 @@ try:
     import unzip_requirements
 except ImportError:
     pass
-from http import HTTPStatus
 from pathlib import Path
 
-from core.constants.base_instagram_constant import LambdaResponseConst
 from functions.social_networks.instagram.post_comment.config_logging.config_handler import Config
 from functions.social_networks.instagram.post_comment.constants.comment import CommentConst
 from functions.social_networks.instagram.post_comment.request_handlers.comment_paging_handler import \
@@ -25,21 +23,13 @@ class MainStep:
         self.comment_request_body = IGCommentPaginateRequestSchema().load(self.event)
 
     def crawl_ig_comments(self):
-        max_num_comments = self.config['max_num_comments']
-        if self.comment_request_body[CommentConst.NUM_ITEM] > max_num_comments:
-            return {LambdaResponseConst.STATUS_CODE: HTTPStatus.INSUFFICIENT_STORAGE,
-                    LambdaResponseConst.MESSAGE: f"{self.comment_request_body[CommentConst.NUM_ITEM]} "
-                                                 f"should be smaller than {max_num_comments}."
-                                                 f" User Should use token in case of getting more comments. "
-                                                 f"Notes: In case of using token: response only return comments, "
-                                                 f"not general info of post"}
         request_params = {
             CommentConst.TIMEOUT: self.config['timeout'],
-            CommentConst.QUERY_HASH: self.config['comment_query_hash'],
+            CommentConst.QUERY_HASH: self.comment_request_body['query_hash'],
             CommentConst.CURSOR: self.comment_request_body.get(CommentConst.CURSOR),
             CommentConst.COOKIES: self.comment_request_body[CommentConst.COOKIES],
             CommentConst.SHORTCODE: self.comment_request_body[CommentConst.SHORTCODE],
-            CommentConst.NUM_ITEM: self.comment_request_body['num_item'],
+            CommentConst.NUM_ITEM: self.comment_request_body[CommentConst.NUM_ITEM],
         }
         url_options = PagingCommentUrlOptionsSchema().load(request_params)
         request_options = PagingCommentRequestOptionsSchema().load(request_params)
@@ -55,7 +45,9 @@ if __name__ == '__main__':
     # Just for testing. Remove it
     event_test = {"data_fields": {"shortcode": 'CEiuPKTF9cA',
                                   "cursor": "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA==",
-                                  "num_item": 15},
+                                  "num_item": 15,
+                                  "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
+                                  },
                   "cookies": {"csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
                               "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
                               "rur": "FRC", "sessionid": "4026520510%3AQ7ZQdKMJFVdHSi%3A23", "shbid": "14922",
