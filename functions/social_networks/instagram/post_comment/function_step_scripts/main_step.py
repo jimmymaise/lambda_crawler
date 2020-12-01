@@ -24,8 +24,8 @@ class MainStep:
 
     def crawl_ig_comments(self):
         request_params = {
-            CommentConst.TIMEOUT: self.config['timeout'],
-            CommentConst.QUERY_HASH: self.comment_request_body['query_hash'],
+            CommentConst.TIMEOUT: self.config[CommentConst.TIMEOUT],
+            CommentConst.QUERY_HASH: self.comment_request_body[CommentConst.QUERY_HASH],
             CommentConst.CURSOR: self.comment_request_body.get(CommentConst.CURSOR),
             CommentConst.COOKIES: self.comment_request_body[CommentConst.COOKIES],
             CommentConst.SHORTCODE: self.comment_request_body[CommentConst.SHORTCODE],

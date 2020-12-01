@@ -9,7 +9,7 @@ class PagingCommentUrlOptionsSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    cursor = fields.Str()
+    cursor = fields.Str(allow_none=True)
     query_hash = fields.Str()
     num_item = fields.Int()
     shortcode = fields.Str()
