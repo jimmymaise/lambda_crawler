@@ -1,0 +1,7 @@
+fb-profile-details:
+  name: ${self:provider.stage}-${self:service}
+  handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
+  description: Get details of profile (user + page info)
+  runtime: python3.8
+  memorySize: 128
+  timeout: 120
