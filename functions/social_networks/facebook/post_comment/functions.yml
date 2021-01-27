@@ -13,9 +13,19 @@ fb-post-details:
             response:
                 template: $input.path('$')
                 statusCodes:
+                    400:
+                        pattern: ".*is invalid.*" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                {
+                                    'message': $input.json('$.errorType'),
+                                    'description': $input.json('$.errorMessage'),
+                                    'errors': $input.json('$.stackTrace')
+                                }
                     500:
-                        pattern: "errorMessage" # Error response regex
                         template:
+                            pattern: "(\n|.)*"
                             application/json: |
                                 #set($inputRoot = $input.path('$'))
                                 {
@@ -23,13 +33,4 @@ fb-post-details:
                                     'description': $input.json('$.errorMessage'),
                                     'errors': $input.json('$.stackTrace')
                                 }
-                    404:
-                        pattern: "Not Found" # Error response regex
-                        template:
-                            application/json: |
-                                #set($inputRoot = $input.path('$'))
-                                {
-                                    'message': $input.json('$.errorType'),
-                                    'description': $input.json('$.errorMessage'),
-                                    'errors': $input.json('$.stackTrace')
-                                }
+
