@@ -26,14 +26,14 @@ FB_GRAPHQL_HEADER = {
     "user-agent": "insomnia/2020.5.2"
 }
 
-FB_GRAPH_API_URL = 'https://graph.facebook.com/v9.0/%s/comments?limit=200&filter=stream&fields=%s&access_token=&s'
+FB_GRAPH_API_URL = 'https://graph.facebook.com/v9.0/%s/comments?limit=200&filter=stream&fields=%s&access_token=%s&after='
 FB_GRAPH_API_VAR = [
     "id",
     "message",
     "from{id,name,username}",
     "comments{id,message,from{id, name},is_hidden,created_time,like_count,attachments{type,url}}",
     "created_time",
-    "is_hidden",
     "like_count",
-    "attachments{type,url}"
+    "parent{id}",
+    "attachment{type,url}"
 ]
