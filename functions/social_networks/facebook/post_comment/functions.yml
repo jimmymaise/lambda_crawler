@@ -13,6 +13,8 @@ fb-post-details:
             response:
                 template: $input.path('$')
                 statusCodes:
+                    200:
+                        pattern: ""
                     400:
                         pattern: ".*is invalid.*" # Error response regex
                         template:
@@ -25,7 +27,7 @@ fb-post-details:
                                 }
                     500:
                         template:
-                            pattern: "(\n|.)*"
+                            pattern: "(\n|.)* |.*Unsupported get request.*|Error:.*"
                             application/json: |
                                 #set($inputRoot = $input.path('$'))
                                 {
