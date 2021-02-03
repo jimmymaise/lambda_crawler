@@ -1,7 +1,7 @@
 """
 Constants for get comment info from post
 """
-
+HIIP_TOKEN = "1784198495144876|949e7fb42e7bc13a4dd3cf4d8f138afa"
 FB_GRAPHQL_URL = "https://www.facebook.com/api/graphql/"
 FB_GRAPHQL_VAR = {
     "after": None,
