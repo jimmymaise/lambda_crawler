@@ -1,59 +1,81 @@
+import json
 try:
     import unzip_requirements
 except ImportError:
     pass
 from pathlib import Path
-
-from functions.social_networks.instagram.post_comment.config_logging.config_handler import Config
-from functions.social_networks.instagram.post_comment.constants.comment import CommentConst
-from functions.social_networks.instagram.post_comment.request_handlers.comment_paging_handler import \
-    CommentPagingHandler
-from functions.social_networks.instagram.post_comment.schemas.comment_paging_schema import \
-    IGCommentPaginateRequestSchema, PagingCommentUrlOptionsSchema, PagingCommentRequestOptionsSchema
+import logging
+from core.constants.base_instagram_constant import LambdaResponseConst
+from functions.social_networks.instagram.post_details.request_handlers.post_details_handler import PostDetailsHandler
+from functions.social_networks.instagram.post_details.schemas.post_schema import RequestSchema
 
 function_path = str(Path(__file__).resolve().parents[1])
 
 
 class MainStep:
+    logger = logging.getLogger()
     def __init__(self, event, context):
-        self.event = event
+        self.link = event.get('link')
+        self.account_info = event['account_info']
         self.context = context
-        self.config = Config.init_config(function_path=function_path)
-        self.paging_handler = CommentPagingHandler()
-        self.comment_request_body = IGCommentPaginateRequestSchema().load(self.event)
+        self.logger = logging.getLogger()
 
-    def crawl_ig_comments(self):
-        request_params = {
-            CommentConst.TIMEOUT: self.config[CommentConst.TIMEOUT],
-            CommentConst.QUERY_HASH: self.comment_request_body[CommentConst.QUERY_HASH],
-            CommentConst.CURSOR: self.comment_request_body.get(CommentConst.CURSOR),
-            CommentConst.COOKIES: self.comment_request_body[CommentConst.COOKIES],
-            CommentConst.SHORTCODE: self.comment_request_body[CommentConst.SHORTCODE],
-            CommentConst.NUM_ITEM: self.comment_request_body[CommentConst.NUM_ITEM],
+    def crawl_post_details(self):
+
+        response_data = LambdaResponseConst.RESPONSE_FORMAT
+        post_info, user_info = PostDetailsHandler(
+            post_link=self.link,
+            account_cookie=self.account_info.get('info')
+        ).crawl_post_details()
+        response_data[LambdaResponseConst.DATA_FIELD] = {
+            LambdaResponseConst.USER_FIELD: user_info,
+            LambdaResponseConst.POST_FIELD: post_info
         }
-        url_options = PagingCommentUrlOptionsSchema().load(request_params)
-        request_options = PagingCommentRequestOptionsSchema().load(request_params)
-
-        return self.paging_handler.do_paging_request(url_options, request_options)
+        return response_data
 
 
 def lambda_handler(event, context):
-    return MainStep(event, context).crawl_ig_comments()
+    RequestSchema().load(event)
+    try:
+        return MainStep(event, context).crawl_post_details()
+    except Exception as e:
+        MainStep.logger.error(e, exc_info=True)
+        exception_type = e.__class__.__name__
+        exception_message = str(e)
+        api_exception_obj = {
+            "isError": True,
+            "type": exception_type,
+            "message": exception_message
+        }
+        # Create a JSON string
+        api_exception_json = json.dumps(api_exception_obj)
+        raise LambdaException(api_exception_json)
 
+
+# Simple exception wrappers
+class ClientException(Exception):
+    pass
+
+class LambdaException(Exception):
+    pass
 
 if __name__ == '__main__':
     # Just for testing. Remove it
-    event_test = {"data_fields": {"shortcode": 'CEiuPKTF9cA',
-                                  "cursor": "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA==",
-                                  "num_item": 15,
-                                  "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
-                                  },
-                  "cookies": {"csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
-                              "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
-                              "rur": "FRC", "sessionid": "4026520510%3AQ7ZQdKMJFVdHSi%3A23", "shbid": "14922",
-                              "urlgen": "{'115.78.0.111': 7552}:1jiXX6:Fyopguky-ncqo3WyxfM-6S3O8YU"}}
-
+    event_test = {
+	"link": "https://www.instagram.com/p/CJ5LCqOFU0u/?utm_source=ig_web_copy_link",
+	"account_info": {
+		"info": {
+			"csrftoken": "ped8nryXbMBmLRizll9xUkgD6isUeqlS",
+			"ds_user_id": "38279754149",
+			"ig_did": "B9FD105A-AA05-4906-AF67-0128EB61B617",
+			"mid": "X2gY7QALAAEl58BKpeW7L1jNb7Dw",
+			"rur": "FTW",
+			"sessionid": "38279754149%3Aka1jEo2By4zWoq%3A26",
+			"shbid": "7292",
+			"shbts": "1600657655.6954184"
+		},
+		"account_id": "123124"
+	}
+}
     response = lambda_handler(event=event_test, context=None)
-    import json
-
     print(json.dumps(response))
