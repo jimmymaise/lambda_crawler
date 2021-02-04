@@ -15,7 +15,7 @@ from core.utils.exceptions import ErrorRequestFormat
 
 class GraphQLHandler:
     """Class for comment collection via FB GraphQL API"""
-    def __init__(self, post_app_id: str):
+    def __init__(self, post_app_id: str, **kwargs):
         self.post_id = self._get_post_id(post_app_id)
         self.list_comment = []
         self.counter = 0
@@ -106,7 +106,10 @@ class GraphQLHandler:
         if cmt.get('author'):
             user_type = cmt['author'].get('__typename', "user").lower()
             parsed_cmt[user_type] = {}
-            parsed_cmt[user_type]["_id"] = int(cmt['author']['id'])
+            if user_type == 'user':
+                parsed_cmt[user_type]["_id"] = int(cmt['author']['id'])
+            else:
+                parsed_cmt[user_type]["app_id"] = int(cmt['author']['id'])
             parsed_cmt['comment']['user_id'] = int(cmt['author']['id'])
             parsed_cmt[user_type]["full_name"] = cmt['author'].get('name')
             parsed_cmt[user_type]["avatar"] = cmt['author']['profile_picture_depth_0'].get('uri')
