@@ -25,3 +25,18 @@ class IGResponseConst:
     NODE = 'node'
     EDGES = 'edges'
     STATUS_CODE = 'status_code'
+
+
+class LambdaResponseConst:
+    """Response constant for AWS Lambda function"""
+    RESPONSE_FORMAT = {
+        "data": {},
+        "message": "Done"
+    }
+    STATUS_CODE = "status"
+    MESS_FIELD = "message"
+    DESC_FIELD = "description"
+    DATA_FIELD = "data"
+    USER_FIELD = "user"
+    POST_FIELD = "post"
+    PAGING_FIELD = "paging"
