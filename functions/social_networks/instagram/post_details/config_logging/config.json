@@ -1,5 +1,5 @@
 {
-  "environment": "fb",
+  "environment": "ig",
   "region": "us-west-2",
   "memory_size": 128,
   "deployment_bucket_name": "hiip-asia-data-new",
