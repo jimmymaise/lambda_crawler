@@ -9,15 +9,21 @@ class PostDetailsHandler:
     """
     Class handler to get details of IG post
     """
-    def __init__(self, post_link, cookie):
-        self.link = f"{post_link}/?__a=1"
-        self.cookie = cookie
+    def __init__(self, post_link, account_cookie):
+        self.link = f"{post_link}?__a=1"
+        self.cookie = account_cookie
 
     def crawl_post_details(self):
         """Get post details base on link + cookie"""
+
         response_obj = requests.get(self.link, cookies=self.cookie, headers=post_constant.DEFAULT_HEADER)
-        if "/accounts/login/" not in response_obj.url:
-            response_data = response_obj.json()['graphql']['shortcode_media']
+        if response_obj.status_code == HTTPStatus.NOT_FOUND:
+            raise requests.HTTPError("Post not found")
+        if response_obj.status_code == HTTPStatus.OK and "/accounts/login/" not in response_obj.url:
+            try:
+                response_data = response_obj.json()['graphql']['shortcode_media']
+            except json.decoder.JSONDecodeError:
+                raise requests.HTTPError("Post link is invalid")
             post_info = self.__parse_post_info(response_data)
             user_info = self.__parse_user_info(response_data['owner'])
             post_info[post_constant.ResponseFields.USER_ID] = user_info[user_constant.ResponseFields.USER_ID]
