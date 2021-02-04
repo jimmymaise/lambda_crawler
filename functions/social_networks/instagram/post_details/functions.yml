@@ -8,31 +8,55 @@ ig-post-details:
     events:
         - http:
             method: post
-            path: post-details
+            path: /post-details
             integration: lambda
+            request:
+                template:
+                    application/x-www-form-urlencoded: null
+                    application/json: |
+                        #set($inputRoot = $input.path('$'))
+                        $input.json("$")
             response:
                 template: $input.path('$')
                 statusCodes:
-                    200:
-                        pattern: ""
                     400:
-                        pattern: ".*is invalid.*" # Error response regex
+                        pattern: ".*is invalid.*|.*required field.*" # Error response regex
                         template:
                             application/json: |
                                 #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
                                 {
-                                    'message': $input.json('$.errorType'),
-                                    'description': $input.json('$.errorMessage'),
-                                    'errors': $input.json('$.stackTrace')
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
+                    404:
+                        pattern: "Post not found" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
+                    429:
+                        pattern: "Cookie is expired" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
                                 }
                     500:
+                        pattern: .*"isError"\s*:\s*true.*
                         template:
-                            pattern: "(\n|.)* |.*Unsupported get request.*|Error:.*"
                             application/json: |
                                 #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
                                 {
-                                    'message': $input.json('$.errorType'),
-                                    'description': $input.json('$.errorMessage'),
-                                    'errors': $input.json('$.stackTrace')
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
                                 }
 
