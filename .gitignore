@@ -5,3 +5,4 @@ venv
 .idea
 *.pyc
 *_requirements.txt
+serverless.yml
