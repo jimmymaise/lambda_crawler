@@ -1,8 +1,4 @@
-import time
-
-from marshmallow import Schema, fields, pre_load, EXCLUDE
-
-from core.constants.base_instagram_constant import LambdaRequestConst
+from marshmallow import Schema, fields, EXCLUDE
 
 
 class PagingCommentUrlOptionsSchema(Schema):
@@ -23,47 +19,21 @@ class PagingCommentRequestOptionsSchema(Schema):
     timeout = fields.Int()
 
 
-class IGPostCommentResponseSchema(Schema):
+class AccountInfoSchema(Schema):
+    """Schema of account info"""
     class Meta:
         unknown = EXCLUDE
 
-    _id = fields.Integer()
-    avatar = fields.Str()
-    user_id = fields.Integer()
-    username = fields.Str()
-    message = fields.Str()
-    take_at_timestamp = fields.Integer()
-
-    @pre_load
-    def process_response(self, data, **kwargs):
-        data['take_at_timestamp'] = data.get('take_at_timestamp', data.get('created_at') or time.time())
-        data['message'] = data.get('message', data.get('text'))
-        data['_id'] = data.get('_id', data.get('id'))
-
-        owner = data.get("owner")
-
-        if owner:
-            data.update(
-                {
-                    'avatar': owner.get('profile_pic_url'),
-                    'username': owner.get('username'),
-                    'user_id': owner.get('id')
-                }
-            )
-        return data
+    info = fields.Dict(required=True, allow_none=False)
+    account_if = fields.Str(required=True, allow_none=False)
 
 
-class IGCommentPaginateRequestSchema(Schema):
+class RequestSchema(Schema):
+    """Schema of request param"""
     class Meta:
         unknown = EXCLUDE
 
-    shortcode = fields.Str()
-    cookies = fields.Dict()
-    cursor = fields.Str(allow_none=True)
-    num_item = fields.Int()
-    query_hash = fields.Str()
-
-    @pre_load
-    def process_data_fields(self, data, **kwargs):
-        data.update(data.get(LambdaRequestConst.DATA_FIELDS, {}))
-        return data
+    shortcode = fields.Str(required=True, allow_none=False)
+    cursor = fields.Str(required=False, allow_none=True)
+    num_item = fields.Int(required=False, allow_none=False)
+    account_info = fields.Nested(AccountInfoSchema, required=True, allow_none=False)
