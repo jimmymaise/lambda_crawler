@@ -12,7 +12,7 @@ paths:
       tags:
         - Get list comment from IG post
       summary: 'Get comment from IG post'
-      description: "Get list comment of post from IG"
+      description: "Get list comment of post from IG. <b>Note: Request need Cookie of some IG account to get data</b>"
       parameters:
         - name: query_hash
           in: query
