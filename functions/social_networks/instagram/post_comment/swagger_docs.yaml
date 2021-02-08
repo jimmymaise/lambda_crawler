@@ -180,6 +180,10 @@ components:
                     type: string
                     description: "\"username\" of commenter on IG"
                     example: "nhanle2684"
+                  parent_comment_id:
+                    type: integer
+                    description: "Parent comment ID of this comment if this is \"reply\""
+                    example: null
                 required:
                   - _id
                   - message
