@@ -1,0 +1,140 @@
+openapi: 3.0.1
+info:
+  title: "Instagram API"
+  description: "API to data from Instagram"
+  version: "1.0.1"
+servers:
+  - url: "https://wwww.instagram.com/"
+
+paths:
+  /post-comment:
+    get:
+      tags:
+        - Get list comment from IG post
+      summary: 'Get comment from IG post'
+      description: "Get list comment of post from IG"
+      parameters:
+        - name: shortcode
+          in: query
+          description: "Shortcode of post which need to get comment"
+          required: true
+          schema:
+            type: string
+            example: "CEiuPKTF9cA"
+        - name: query_hash
+          in: query
+          description: "Hash string to get info from IG"
+          required: true
+          schema:
+            type: string
+            example: "bc3296d1ce80a24b1b6e40b1e72903f5"
+        - name: first
+          in: query
+          description: "Number of comment need to get"
+          required: false
+          schema:
+            type: integer
+            example: 15
+        - name: after
+          in: query
+          description: "Cursor string to get comment (if have)"
+          required: false
+          schema:
+            type: string
+            example: null
+      responses:
+        200:
+          description: "List comment and commenter info which get from IG post"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+
+components:
+  schemas:
+    comment:
+      type: object
+      properties:
+        data:
+          type: array
+          description: "Details of comments that had been crawled"
+          items:
+            type: object
+            properties:
+              comment:
+                type: object
+                description: "Details of comment on IG post"
+                properties:
+                  _id:
+                    type: integer
+                    description: "ID of comment on IG post"
+                    example: 17931487327205002
+                  message:
+                    type: string
+                    description: "Content of comment on IG post"
+                    example: "Bữa nào đi ăn ko chị @linnie.theczarycat ơiiii"
+                  post_id:
+                    type: integer
+                    description: "ID of post that comment is belong to"
+                    example: 1898687296258921070
+                  taken_at_timestamp:
+                    type: integer
+                    description: "The time that comment had been created in timestamp"
+                    example: 1540564538
+                  user_id:
+                    type: integer
+                    description: "Original ID of commenter on IG"
+                    example: 464621702
+                  username:
+                    type: string
+                    description: "\"username\" of commenter on IG"
+                    example: "nhanle2684"
+                  parent_comment_id:
+                    type: integer
+                    description: "Parent comment ID of this comment if this is \"reply\""
+                    example: null
+                required:
+                  - _id
+                  - message
+                  - taken_at_timestamp
+                  - post_id
+              user:
+                type: object
+                description: "Info of commenter on IG post"
+                properties:
+                  _id:
+                    type: integer
+                    description: "Original ID of commenter on IG"
+                    example: 464621702
+                  username:
+                    type: string
+                    description: "\"username\" of commenter on IG"
+                    example: "nhanle2684"
+                  avatar:
+                    type: string
+                    description: "Name that displayed on IG of commenter"
+                    example: "https://instagram.fdad1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/133658443_5103095349708509_3061200788998969839_n.jpg?_nc_ht=instagram.fdad1-1.fna.fbcdn.net&_nc_ohc=aE0_UAQq2yEAX9ZCXPD&tp=1&oh=5532230937236e8facabd7f29ea0cd51&oe=604B8111"
+                  is_verify:
+                    type: boolean
+                    description: "Account is verify by IG or not"
+                    example: false
+        paging:
+          type: object
+          description: "Paging info to get next comment (if have)"
+          properties:
+            has_next_page:
+              type: boolean
+              description: "Status to get more data: True - can get more data \/False - have no data to get"
+              example: false
+            next_cursor:
+              type: string
+              description: "Cursor variable to get more data"
+              example: null
+        message:
+          type: string
+          description: "Collection message"
+          example: "Done"
+        description:
+          type: string
+          description: "Details of error message (if have)"
+          example: null
