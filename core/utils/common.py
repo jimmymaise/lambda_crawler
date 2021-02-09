@@ -1,3 +1,23 @@
+import requests
+
+
+def update_account_status(social_network: str, account_id: str,
+                          status_code: int, message: str=None):
+    """Update status after collection process is Done"""
+    payload = {
+        "api_type": "UPDATE_STATUS",
+        "api_body": {
+            "social_network": social_network.upper(),
+            "account_ID": account_id,
+            "data": {
+                "status_code": status_code,
+                "message": message
+            }
+        }
+    }
+    requests.post(url="http://44.229.239.146:9099/update_status", json=payload)
+
+
 class Common:
     @classmethod
     def get_dict_data_by_path(cls, _dict, keys):
@@ -16,3 +36,4 @@ class Common:
             f(*args, **kwargs)
         except Exception as e:
             print("we have a problem: {0}".format(e))
+
