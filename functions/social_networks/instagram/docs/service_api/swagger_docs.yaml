@@ -35,10 +35,6 @@ paths:
                   type: string
                   description: "Cursor to get comment (if have)"
                   example: "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA=="
-                query_hash:
-                  type: string
-                  description: "Hash string to get comment from post"
-                  example: "bc3296d1ce80a24b1b6e40b1e72903f5"
                 num_item:
                   type: integer
                   description: "Num of comment need to get"
