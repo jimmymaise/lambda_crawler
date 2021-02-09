@@ -1,11 +1,10 @@
 {
-  "environment": "dev",
+  "environment": "ig",
   "region": "us-west-2",
-  "memory_size": 500,
-  "deployment_bucket_name": "aduro-data-dev",
+  "memory_size": 128,
+  "deployment_bucket_name": "hiip-asia-data-new",
   "lambda_external_configurations": {
-    "comment_func_role": "arn:aws:iam::762035899142:role/lambda_execution_role_dev"
+    "default_role": "arn:aws:iam::450253548902:role/default-lambda-function-role"
   },
-  "timeout": 20,
-  "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
+  "timeout": 30
 }
