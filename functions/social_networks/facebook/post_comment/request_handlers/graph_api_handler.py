@@ -7,9 +7,10 @@ from core.utils.exceptions import ErrorRequestFormat
 
 class GraphApiHandler:
     """Class for comment collection via FB Graph API - Only for Facebook Page"""
-    def __init__(self, post_app_id: str, token: str):
+    def __init__(self, post_app_id: str, account_info: dict):
         self.post_app_id = post_app_id
-        self.token = token
+        self.account_info = account_info
+        self.token = cmt_const.HIIP_TOKEN
         self.list_cmt = []
         self.cursor = {'has_next_page': False, 'next_cursor': None}
 
@@ -31,8 +32,8 @@ class GraphApiHandler:
                 raise TypeError("'post_app_id' is invalid")
         else:
             raise TypeError("'post_app_id' is invalid")
-        if not isinstance(self.token, str):
-            raise TypeError("'token' is invalid")
+        if isinstance(self.account_info, dict) and self.account_info.get('info'):
+            self.token = self.account_info.get('info')
 
     def _get_list_cmt_from_graph_api(self, url):
         """Get list comment of post via FB Graph API - Only for Facebook Page"""
