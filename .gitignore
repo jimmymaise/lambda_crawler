@@ -6,3 +6,4 @@ venv
 *.pyc
 *_requirements.txt
 serverless.yml
+serverless.yml
