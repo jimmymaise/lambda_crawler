@@ -45,6 +45,7 @@ paths:
                   example: |
                     {
                       "accont_id": "accountID_001",
+                      "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
                       "info": {
                                 "csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
                                 "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
@@ -67,6 +68,10 @@ paths:
                       type: string
                       description: "ID of account which use to crawl. This ID will be used to update its status back to Account Manager"
                       example: "accountID_001"
+                    query_hash:
+                      type: string
+                      description: "Hash string to get comment info"
+                      example: "bc3296d1ce80a24b1b6e40b1e72903f5"
                   required:
                     - info
                     - account_id
