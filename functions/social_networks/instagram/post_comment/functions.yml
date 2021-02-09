@@ -1,14 +1,66 @@
-hello:
-  role: "${self:custom.externalConfigurations.comment_func_role}"
-  name: ${self:provider.stage}-${self:service}-ig_comment_crawler
-  handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
-  #description: Description of what the lambda function does # optional, Description to publish to AWS
-  #runtime: python3.8 # optional overwrite, default is provider runtime
-  #memorySize: 512 # optional, in MB, default is 1024
-  #timeout: 10 # optional, in seconds, default is 6
-  #provisionedConcurrency: 3 # optional, Count of provisioned lambda instances
-  #reservedConcurrency: 5 # optional, reserved concurrency limit for this function. By default, AWS uses account concurrency limit
-  #tracing: PassThrough # optional, overwrite, can be 'Active' or 'PassThrough
-  #onError: arn:aws:sns:us-east-1:XXXXXX:test # Ref, Fn::GetAtt and Fn::ImportValue are supported as well
-
+ig-post-comment:
+    name: ${self:provider.stage}-${self:service}
+    handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
+    description: "Instagram - List comment of post (user + comment info)"
+    runtime: python3.8
+    memorySize: 128
+    timeout: 30
+    events:
+        - http:
+            method: post
+            path: /post-comment
+            integration: lambda
+            request:
+                template:
+                    application/x-www-form-urlencoded: null
+                    application/json: |
+                        #set($inputRoot = $input.path('$'))
+                        $input.json("$")
+            response:
+                template: $input.path('$')
+                statusCodes:
+                    200:
+                        pattern: null
+                        template:
+                            application/json: null
+                    400:
+                        pattern: ".*is invalid.*|.*required field.*" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
+                    404:
+                        pattern: "Post not found" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
+                    429:
+                        pattern: "Cookie is expired" # Error response regex
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
+                    500:
+                        pattern: .*"isError"\s*:\s*true.*
+                        template:
+                            application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                                {
+                                    "message" : "$errorMessageObj.type",
+                                    "description": "$errorMessageObj.message",
+                                }
 
