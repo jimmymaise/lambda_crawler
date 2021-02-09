@@ -170,10 +170,6 @@ components:
                     type: string
                     description: "Content of comment on IG post"
                     example: "Bữa nào đi ăn ko chị @linnie.theczarycat ơiiii"
-                  post_id:
-                    type: integer
-                    description: "ID of post that comment is belong to"
-                    example: 1898687296258921070
                   taken_at_timestamp:
                     type: integer
                     description: "The time that comment had been created in timestamp"
@@ -182,10 +178,10 @@ components:
                     type: integer
                     description: "Original ID of commenter on IG"
                     example: 464621702
-                  username:
-                    type: string
-                    description: "\"username\" of commenter on IG"
-                    example: "nhanle2684"
+                  num_like:
+                    type: integer
+                    description: "Num like of comment"
+                    example: 164
                   parent_comment_id:
                     type: integer
                     description: "Parent comment ID of this comment if this is \"reply\""
@@ -194,7 +190,7 @@ components:
                   - _id
                   - message
                   - taken_at_timestamp
-                  - post_id
+                  - user_id
               user:
                 type: object
                 description: "Info of commenter on IG post"
