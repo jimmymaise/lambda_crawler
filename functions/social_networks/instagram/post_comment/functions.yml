@@ -8,7 +8,7 @@ ig-post-comment:
     events:
         - http:
             method: post
-            path: /post-comment
+            path: /post-comments
             integration: lambda
             request:
                 template:
