@@ -1,3 +1,4 @@
+import json
 from core.social_networks.instagram.request_handlers.base_item_paging_handler import BaseItemPagingHandler
 from functions.social_networks.instagram.post_comment.constants.comment import CommentConst
 from functions.social_networks.instagram.post_comment.schemas.comment_paging_schema import \
@@ -12,7 +13,7 @@ class CommentPagingHandler(BaseItemPagingHandler):
         self.comment_response_schema = IGPostCommentResponseSchema()
 
     def get_request_url(self, url_options):
-        request_url = CommentConst.COMMENT_URL_NO_CURSOR.format(**url_options)\
-                      if not url_options[CommentConst.CURSOR]\
-                      else CommentConst.COMMENT_URL_WITH_CURSOR.format(**url_options)
+        base_url = "https://www.instagram.com/graphql/query/?query_hash=%s&variables=" % url_options['query_hash']
+        request_url = base_url + '{"shortcode":"%s","first":%s,"after":%s}'\
+                      % (url_options['shortcode'], url_options['num_item'], json.dumps(url_options['cursor']))
         return request_url
