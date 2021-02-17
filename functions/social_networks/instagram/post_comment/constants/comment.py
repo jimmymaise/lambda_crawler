@@ -5,9 +5,10 @@ class CommentConst:
     CONST_CONFIG_FILE_PATH = 'config/config.json'
 
     # URLs
-    COMMENT_URL_NO_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{{"shortcode": "{shortcode}", "first": {num_item}}}'
-    COMMENT_URL_WITH_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{{"shortcode": "{shortcode}", "first": {num_item},' \
-                                                                            '"after":"{cursor}"}}'
+    COMMENT_URL_NO_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{{"shortcode":"{shortcode}","first":{num_item}}}'
+    COMMENT_URL_WITH_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{"shortcode":"%s",' +\
+                                                                            '"first":%s,' + \
+                                                                            '"after":"%s"}'
     COMMENT_DATA_RESPONSE_KEY_PATH = ['data', 'shortcode_media', 'edge_media_to_parent_comment']
     COMMENT_RESOURCE_TYPE = 'COMMENT'
     ACCOUNT = "account_info"
