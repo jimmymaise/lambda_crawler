@@ -1,6 +1,6 @@
 # BASE URLs
 class IGBaseURLConstant:
-    BASE_INSTAGRAM_PAGING_URL = 'https://www.instagram.com/graphql/query/?query_hash={query_hash}&variables='
+    BASE_INSTAGRAM_PAGING_URL = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables='
     BASE_INSTAGRAM_GET_ONE_ITEM_DETAIL_URL = 'https://www.instagram.com/{item_id}/?__a=1'
 
 
@@ -17,7 +17,7 @@ class IGResponseConst:
     NODE = 'node'
     EDGES = 'edges'
     STATUS_CODE = 'status_code'
-    CURSOR = "cursor"
+    CURSOR = "next_cursor"
 
 
 class LambdaResponseConst:
