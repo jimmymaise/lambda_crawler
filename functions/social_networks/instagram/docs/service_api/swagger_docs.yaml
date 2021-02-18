@@ -1,0 +1,233 @@
+openapi: 3.0.1
+info:
+  title: "Service API - Instagram"
+  description: "API to get details info from social network - Instagram"
+  version: "1.0.1"
+servers:
+  - url: "https://6hxeqgmr58.execute-api.us-west-2.amazonaws.com/ig/"
+
+paths:
+  /post-comment:
+    post:
+      tags:
+        - Get list comment from IG post
+      summary: 'Get comment from IG post'
+      description: "Return list comment and commenter info from IG post"
+      parameters:
+        - name: X-API-KEY
+          in: header
+          description: "Required API Key to request"
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {"query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5","shortcode": "CEiuPKTF9cA","cursor": "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA==","num_item": 15,"account_info": {"accont_id": "accountID_001","info": {"csrftoken":"nWQDjZR15gg18NDkMYo64DOo9TIiE6uq","ds_user_id": "4026520510","ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB","mid":"XpU29wALAAGyV7cDF8TSJ7z_3R6I","rur": "FRC","sessionid":"4026520510%3AQ7ZQdKMJFVdHSi%3A23","shbid": "14922","urlgen": "{'11.78.0.111': 7552}:1jiXX6:Fyopguky-ncqo3WyxfM-6S3O8YU"}}}
+              properties:
+                shortcode:
+                  type: string
+                  description: "Shortcode of post on IG"
+                  example: "CEiuPKTF9cA"
+                cursor:
+                  type: string
+                  description: "Cursor to get comment (if have)"
+                  example: "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA=="
+                num_item:
+                  type: integer
+                  description: "Num of comment need to get"
+                  example: 15
+                account_info:
+                  type: object
+                  description: "Account info which get from \"Account Manager\""
+                  example: |
+                    {
+                      "accont_id": "accountID_001",
+                      "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
+                      "info": {
+                                "csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
+                                "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
+                                "rur": "FRC", "sessionid": "4026520510%3AQ7ZQdKMJFVdHSi%3A23", "shbid": "14922",
+                                "urlgen": "{'115.78.0.111': 7552}:1jiXX6:Fyopguky-ncqo3WyxfM-6S3O8YU"
+                              }
+                    }
+                  properties:
+                    info:
+                      type: object
+                      description: "Cookie of account which use to get comment from IG post"
+                      example: |
+                        {
+                          "csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
+                          "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
+                          "rur": "FRC", "sessionid": "4026520510%3AQ7ZQdKMJFVdHSi%3A23", "shbid": "14922",
+                          "urlgen": "{'115.78.0.111': 7552}:1jiXX6:Fyopguky-ncqo3WyxfM-6S3O8YU"
+                        }
+                    account_id:
+                      type: string
+                      description: "ID of account which use to crawl. This ID will be used to update its status back to Account Manager"
+                      example: "accountID_001"
+                    query_hash:
+                      type: string
+                      description: "Hash string to get comment info"
+                      example: "bc3296d1ce80a24b1b6e40b1e72903f5"
+                  required:
+                    - info
+                    - account_id
+              required:
+                - shortcode
+                - account_info
+                - query_hash
+      responses:
+        200:
+          description: "List comment and commenter info which get from IG post"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        400:
+          description: "Request param is invalid"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Collection message"
+                    example: "RequestError"
+                  description:
+                    type: string
+                    description: "Details of error message (if have)"
+                    example: ".... missing required field"
+        404:
+          description: "Post not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Collection message"
+                    example: "NotFound"
+                  description:
+                    type: string
+                    description: "Details of error message (if have)"
+                    example: "Post not found"
+        429:
+          description: "Cookie is expired"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Collection message"
+                    example: "RequestError"
+                  description:
+                    type: string
+                    description: "Details of error message (if have)"
+                    example: "Cookie is expired"
+        500:
+          description: "Internal server error"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Collection message"
+                    example: "NoneTypeError"
+                  description:
+                    type: string
+                    description: "Details of error message (if have)"
+                    example: "Cannot get ...."
+
+components:
+  schemas:
+    comment:
+      type: object
+      properties:
+        data:
+          type: array
+          description: "Details of comments that had been crawled"
+          items:
+            type: object
+            properties:
+              comment:
+                type: object
+                description: "Details of comment on IG post"
+                properties:
+                  _id:
+                    type: integer
+                    description: "ID of comment on IG post"
+                    example: 17931487327205002
+                  message:
+                    type: string
+                    description: "Content of comment on IG post"
+                    example: "Bữa nào đi ăn ko chị @linnie.theczarycat ơiiii"
+                  taken_at_timestamp:
+                    type: integer
+                    description: "The time that comment had been created in timestamp"
+                    example: 1540564538
+                  user_id:
+                    type: integer
+                    description: "Original ID of commenter on IG"
+                    example: 464621702
+                  num_like:
+                    type: integer
+                    description: "Num like of comment"
+                    example: 164
+                  parent_comment_id:
+                    type: integer
+                    description: "Parent comment ID of this comment if this is \"reply\""
+                    example: null
+                required:
+                  - _id
+                  - message
+                  - taken_at_timestamp
+                  - user_id
+              user:
+                type: object
+                description: "Info of commenter on IG post"
+                properties:
+                  _id:
+                    type: integer
+                    description: "Original ID of commenter on IG"
+                    example: 464621702
+                  username:
+                    type: string
+                    description: "\"username\" of commenter on IG"
+                    example: "nhanle2684"
+                  avatar:
+                    type: string
+                    description: "Name that displayed on IG of commenter"
+                    example: "https://instagram.fdad1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/133658443_5103095349708509_3061200788998969839_n.jpg?_nc_ht=instagram.fdad1-1.fna.fbcdn.net&_nc_ohc=aE0_UAQq2yEAX9ZCXPD&tp=1&oh=5532230937236e8facabd7f29ea0cd51&oe=604B8111"
+                  is_verify:
+                    type: boolean
+                    description: "Account is verify by IG or not"
+                    example: false
+        paging:
+          type: object
+          description: "Paging info to get next comment (if have)"
+          properties:
+            has_next_page:
+              type: boolean
+              description: "Status to get more data: True - can get more data \/False - have no data to get"
+              example: false
+            next_cursor:
+              type: string
+              description: "Cursor variable to get more data"
+              example: null
+        message:
+          type: string
+          description: "Collection message"
+          example: "Done"
+        description:
+          type: string
+          description: "Details of error message (if have)"
+          example: null

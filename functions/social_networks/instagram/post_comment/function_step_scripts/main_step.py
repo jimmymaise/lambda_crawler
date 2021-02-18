@@ -19,26 +19,32 @@ class MainStep:
         self.event = event
         self.context = context
         self.config = Config.init_config(function_path=function_path)
-        self.paging_handler = CommentPagingHandler()
-        self.comment_request_body = IGCommentPaginateRequestSchema().load(self.event)
+        self.request_body = IGCommentPaginateRequestSchema().load(self.event)
 
     def crawl_ig_comments(self):
         request_params = {
             CommentConst.TIMEOUT: self.config[CommentConst.TIMEOUT],
-            CommentConst.QUERY_HASH: self.comment_request_body[CommentConst.QUERY_HASH],
-            CommentConst.CURSOR: self.comment_request_body.get(CommentConst.CURSOR),
-            CommentConst.COOKIES: self.comment_request_body[CommentConst.COOKIES],
-            CommentConst.SHORTCODE: self.comment_request_body[CommentConst.SHORTCODE],
-            CommentConst.NUM_ITEM: self.comment_request_body[CommentConst.NUM_ITEM],
+            CommentConst.CURSOR: self.request_body.get(CommentConst.CURSOR),
+            CommentConst.SHORTCODE: self.request_body[CommentConst.SHORTCODE],
+            CommentConst.NUM_ITEM: self.request_body[CommentConst.NUM_ITEM],
+            CommentConst.QUERY_HASH: self.request_body[CommentConst.ACCOUNT][CommentConst.QUERY_HASH],
+            CommentConst.ACCOUNT_ID: self.request_body[CommentConst.ACCOUNT][CommentConst.ACCOUNT_ID],
+            CommentConst.COOKIES: self.request_body[CommentConst.ACCOUNT][CommentConst.COOKIE_FIELD],
         }
         url_options = PagingCommentUrlOptionsSchema().load(request_params)
         request_options = PagingCommentRequestOptionsSchema().load(request_params)
-
-        return self.paging_handler.do_paging_request(url_options, request_options)
+        return CommentPagingHandler(url_options, request_options).do_paging_request()
 
 
 def lambda_handler(event, context):
-    return MainStep(event, context).crawl_ig_comments()
+    try:
+        return MainStep(event, context).crawl_ig_comments()
+    except Exception as e:
+        fail_param = {
+            "isError": True,
+            "details": e
+        }
+        raise RuntimeError(fail_param)
 
 
 if __name__ == '__main__':

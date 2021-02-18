@@ -20,3 +20,17 @@ class CoreConst:
 
     # Exception
     NOT_A_FILE_ERROR_MESSAGE = 'NotAFile'
+
+    # Account Manager API
+    AM_API = "http://34.219.102.184:9099"
+    DEFAULT_PAYLOAD = {
+        "api_type": "UPDATE_STATUS",
+        "api_body": {
+            "social_network": "FACEBOOK",
+            "account_ID": "",
+            "data": {
+                "status_code": 200,
+                "message": "Done"
+            }
+        }
+    }

@@ -1,2 +1,9 @@
 node_modules
 .serverless
+.requirements.zip
+venv
+.idea
+*.pyc
+*_requirements.txt
+serverless.yml
+serverless.yml

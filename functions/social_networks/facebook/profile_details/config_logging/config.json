@@ -1,10 +1,10 @@
 {
-  "environment": "ig",
+  "environment": "fb",
   "region": "us-west-2",
   "memory_size": 128,
   "deployment_bucket_name": "hiip-asia-data-new",
   "lambda_external_configurations": {
     "default_role": "arn:aws:iam::450253548902:role/default-lambda-function-role"
   },
-  "timeout": 30
+  "timeout": 120
 }

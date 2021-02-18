@@ -1,0 +1,185 @@
+openapi: 3.0.1
+info:
+  title: "Instagram API"
+  description: "API to get data from Instagram"
+  version: "1.0.1"
+servers:
+  - url: "https://wwww.instagram.com/"
+
+paths:
+  /graphql/query:
+    get:
+      tags:
+        - Get list comment from IG post
+      summary: 'Get comment from IG post'
+      description: "Get list comment of post from IG. <b>Note: Request need Cookie of some IG account to get data</b>"
+      parameters:
+        - name: query_hash
+          in: query
+          description: "Hash string to get info from IG"
+          required: true
+          schema:
+            type: string
+            example: "bc3296d1ce80a24b1b6e40b1e72903f5"
+        - name: variables
+          in: query
+          description: "Variable to get comment info"
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shortcode:
+                    type: string
+                    description: "Shortcode of post which need to get comment"
+                    example: "CEiuPKTF9cA"
+                  first:
+                    description: "Number of comment need to get"
+                    type: integer
+                    example: 15
+                  after:
+                    description: "Cursor string to get comment (if have)"
+                    type: string
+                    example: null
+      responses:
+        200:
+          description: "List comment and commenter info which get from IG post"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: "Comment info from IG"
+                    properties:
+                      shortcode_media:
+                        type: object
+                        description: "Comment info from IG"
+                        properties:
+                          edge_media_to_parent_comment:
+                            type: object
+                            description: "Include comment info + paging info to get next comment"
+                            properties:
+                              count:
+                                type: integer
+                                description: "Num total comment of post"
+                                example: 53
+                              page_info:
+                                $ref: '#/components/schemas/paging_info'
+                              edges:
+                                description: "List reply comment if have"
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/comment-item'
+                  status:
+                    type: string
+                    description: "Status of request"
+                    example: "ok"
+                required:
+                  - data
+                  - status
+        429:
+          description: "Cookie is expired"
+          content:
+            application/json:
+              schema:
+                example: {}
+
+components:
+  schemas:
+    paging_info:
+      type: object
+      description: "Include paging info to get more comment if have"
+      properties:
+        has_next_page:
+          type: boolean
+          description: "Have next page to get more comment or not. If true => can get more"
+          example: true
+        end_cursor:
+          type: string
+          description: "Cursor string to get more comment if have"
+          example: "QVFCMmoxNERCZVdnMEJKd3h6ejJqLWUxaUladVFDUEFGNU5NMG00eV95a2VqSEdka2d1UzY3T0dUMHljYmNlTEhWQl9XN2lyeXdMOHlUMTI1dHR0Y3hnSQ=="
+      required:
+        - has_next_page
+        - end_cursor
+    comment-item:
+      type: object
+      properties:
+          node:
+            type: object
+            description: "Details info of comment"
+            properties:
+              id:
+                type: string
+                description: "ID of comment in that had convert to string. Convert to \"int\" to insert into DB "
+                example: "17964293053355396"
+              text:
+                type: string
+                description: "Content of comment"
+                example: "Da chị đẹp quá ❤️"
+              created_at:
+                type: integer
+                description: "The time that comment had been created in timestamp"
+                example: 1605848445
+              did_report_as_spam:
+                type: boolean
+                description: "Comment had been reported as spam or not"
+                example: false
+              owner:
+                type: object
+                description: "Basic info of commenter"
+                properties:
+                  id:
+                    type: string
+                    description: "Original ID of commenter on IG"
+                    example: "5622565700"
+                  is_verified:
+                    type: boolean
+                    description: "Original ID of commenter on IG"
+                    example: "5622565700"
+                  profile_pic_url:
+                    type: string
+                    description: "Avatar URL of commenter"
+                    example: https://instagram.fdad1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/93350323_225972782148650_394921070341128192_n.jpg?_nc_ht=instagram.fdad1-1.fna.fbcdn.net\u0026_nc_ohc=ORd8en3Imd4AX8z5wX7\u0026tp=1\u0026oh=bbcaeadfbc275c4850a277bba353e9f0\u0026oe=604B98E5"
+                  username:
+                    type: string
+                    description: "Username of commenter on IG"
+                    example: "khanhvan110"
+              viewer_has_liked:
+                type: boolean
+                description: "Viewer has liked comment or not?"
+                example: false
+              edge_liked_by:
+                type: object
+                description: "Like info of comment: Num like"
+                properties:
+                  count:
+                    type: integer
+                    description: "Num like which comment had been had"
+                    example: 1
+              edge_threaded_comments:
+                type: object
+                description: "Reply comment info if have"
+                properties:
+                  count:
+                    type: integer
+                    description: "Num reply comment that this comment had"
+                    example: 1
+                  page_info:
+                    $ref: '#/components/schemas/paging_info'
+                  edges:
+                    type: array
+                    description: "List comment reply"
+                    example: [{"node": {"id": "17930489035433881", "text": "@joshthaq thế tui có ác hong 🙈???", "created_at": 1605872744, "did_report_as_spam": false, "owner": {"id": "9020894285", "is_verified": true, "profile_pic_url": "https://instagram.fdad1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/145010747_3609873835757258_6982124722443592628_n.jpg?_nc_ht=instagram.fdad1-1.fna.fbcdn.net\u0026_nc_ohc=oXotPmTRoUEAX8B-3U_\u0026tp=1\u0026oh=b802412bf744b51cd194da1853fa808d\u0026oe=604C0809", "username": "tramngo.official"}, "viewer_has_liked": false, "edge_liked_by": {"count": 1}, "is_restricted_pending": false}}]
+                    items:
+                      $ref: '#/components/schemas/comment-item'
+            required:
+              - id
+              - text
+              - created_at
+              - did_report_as_spam
+              - owner
+              - view_has_liked
+              - edge_liked_by

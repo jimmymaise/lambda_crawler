@@ -1,14 +1,14 @@
-ig-post-comment:
+ig-post-details:
     name: ${self:provider.stage}-${self:service}
     handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
-    description: "Instagram - List comment of post (user + comment info)"
+    description: "Instagram - Get details of post (user + post info)"
     runtime: python3.8
     memorySize: 128
     timeout: 30
     events:
         - http:
             method: post
-            path: /post-comments
+            path: /post-details
             integration: lambda
             request:
                 template:
@@ -19,10 +19,6 @@ ig-post-comment:
             response:
                 template: $input.path('$')
                 statusCodes:
-                    200:
-                        pattern: null
-                        template:
-                            application/json: null
                     400:
                         pattern: ".*is invalid.*|.*required field.*" # Error response regex
                         template:
