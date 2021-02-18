@@ -20,7 +20,6 @@ class MainStep:
         self.context = context
         self.config = Config.init_config(function_path=function_path)
         self.request_body = IGCommentPaginateRequestSchema().load(self.event)
-        self.paging_handler = CommentPagingHandler()
 
     def crawl_ig_comments(self):
         request_params = {
@@ -34,7 +33,7 @@ class MainStep:
         }
         url_options = PagingCommentUrlOptionsSchema().load(request_params)
         request_options = PagingCommentRequestOptionsSchema().load(request_params)
-        return self.paging_handler.do_paging_request(url_options, request_options)
+        return CommentPagingHandler(url_options, request_options).do_paging_request()
 
 
 def lambda_handler(event, context):
