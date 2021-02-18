@@ -121,3 +121,7 @@ class CommentPagingHandler(BaseItemPagingHandler):
             resource_response_dict = Common.get_dict_data_by_path(request_res, self.res_key_path_to_reply_list)
             for reply_cmt in resource_response_dict[IGResponseConst.EDGES]:
                 self._transfrom_response_comment(reply_cmt[IGResponseConst.NODE], parent_id)
+            if resource_response_dict[IGResponseConst.PAGE_INFO][IGResponseConst.HAS_NEXT_PAGE]:
+                self.url_options['reply_cursor'] = resource_response_dict[IGResponseConst.PAGE_INFO]\
+                                                   .get(IGResponseConst.END_CURSOR)
+                self._get_reply_comment(parent_id)
