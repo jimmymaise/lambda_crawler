@@ -1,12 +1,15 @@
 import re
-import requests
+
 import dateparser
+import requests
+
 import functions.social_networks.facebook.post_comment.constants.comment as cmt_const
 from core.utils.exceptions import ErrorRequestFormat
 
 
 class GraphApiHandler:
     """Class for comment collection via FB Graph API - Only for Facebook Page"""
+
     def __init__(self, post_app_id: str, account_info: dict):
         self.post_app_id = post_app_id
         self.account_info = account_info
@@ -85,8 +88,8 @@ class GraphApiHandler:
 
         # Parse sticker (if have)
         if cmt.get('attachment'):
-            parsed_cmt['comment']['sticker'] = cmt['attachment'].get('url')\
-                                               if cmt['attachment'].get('type') == "sticker" else None
+            parsed_cmt['comment']['sticker'] = cmt['attachment'].get('url') \
+                if cmt['attachment'].get('type') == "sticker" else None
 
         # --- Parse page info (if have) ---
         if cmt.get('from'):

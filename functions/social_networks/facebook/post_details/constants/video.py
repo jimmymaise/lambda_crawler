@@ -1,6 +1,8 @@
 """
 Class for get Post details info
 """
+
+
 class LoginRegexStr:
     "Regex var for Post with login"
     NUM_REACTION = r"subscription\_target\_id\:\"%d\".*reaction\_count\:\{count\:(\d+)\}"
@@ -20,8 +22,8 @@ class LoginRegexStr:
 class NotLoginRegexStr:
     "Regex var for Post without login"
     NUM_REACTION = r'subscription\_target\_id\:\"%s\".*\,reaction_count:\{count\:(\d+)'
-    NUM_SHARE    = r'subscription\_target\_id\:\"%s\".*\,share\_count\:\{count\:(\d+)\}'
-    NUM_COMMENT  = r'subscription\_target\_id\:\"%s\".*\,comment_count:\{total_count:(\d+)'
+    NUM_SHARE = r'subscription\_target\_id\:\"%s\".*\,share\_count\:\{count\:(\d+)\}'
+    NUM_COMMENT = r'subscription\_target\_id\:\"%s\".*\,comment_count:\{total_count:(\d+)'
     POST_ID = r"subscription_target_id:\"(\d+)\""
     CONTENT_TAG = "div"
     CONTENT_IDS = {"data-testid": "post_message"}

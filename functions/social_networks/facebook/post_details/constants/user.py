@@ -17,4 +17,3 @@ class UserNLoginRegexStr:
     USERNAME = r'rel\=\"canonical\" href\=\"https\:\/\/www\.facebook\.com\/(\S+)/(?:posts|videos)/'
     USER_AVATAR = r'img class\="scaledImageFitWidth img" src\="(\S+)\" data\-src\='
     FULL_NAME = r'meta property\=\"og\:title\" content\=\"(.*)" \/\>\<meta property\=\"og\:description\"'
-    

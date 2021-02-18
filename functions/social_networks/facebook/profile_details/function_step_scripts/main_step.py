@@ -2,6 +2,7 @@
 Main file for collection service
 """
 from http import HTTPStatus
+
 try:
     import unzip_requirements
 except ImportError:
@@ -11,12 +12,12 @@ import core.constants.base_facebook_constant as fb_constant
 from functions.social_networks.facebook.post_details.config_logging.config_handler import Config
 from functions.social_networks.facebook.post_details.request_handlers.profile_handler import ProfileHandler
 
-
 function_path = str(Path(__file__).resolve().parents[1])
 
 
 class MainStep:
     "Class for parsing profile info"
+
     def __init__(self, event, context):
         self.event = event
         self.context = context

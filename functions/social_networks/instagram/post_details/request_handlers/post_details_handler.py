@@ -1,6 +1,8 @@
 import json
 from http import HTTPStatus
+
 import requests
+
 import functions.social_networks.instagram.post_details.constants.post as post_constant
 import functions.social_networks.instagram.post_details.constants.user as user_constant
 
@@ -9,6 +11,7 @@ class PostDetailsHandler:
     """
     Class handler to get details of IG post
     """
+
     def __init__(self, post_link, account_cookie):
         self.link = f"{post_link}?__a=1"
         self.cookie = account_cookie
@@ -83,17 +86,18 @@ class PostDetailsHandler:
         }
         return user_info
 
+
 if __name__ == '__main__':
     link = "https://www.instagram.com/p/CKU_Mn9BrXY"
     cookie = {
-    "csrftoken": "ped8nryXbMBmLRizll9xUkgD6isUeqlS",
-    "ds_user_id": "38279754149",
-    "ig_did": "B9FD105A-AA05-4906-AF67-0128EB61B617",
-    "mid": "X2gY7QALAAEl58BKpeW7L1jNb7Dw",
-    "rur": "FTW",
-    "sessionid": "38279754149%3Aka1jEo2By4zWoq%3A26",
-    "shbid": "7292",
-    "shbts": "1600657655.6954184",
-}
+        "csrftoken": "ped8nryXbMBmLRizll9xUkgD6isUeqlS",
+        "ds_user_id": "38279754149",
+        "ig_did": "B9FD105A-AA05-4906-AF67-0128EB61B617",
+        "mid": "X2gY7QALAAEl58BKpeW7L1jNb7Dw",
+        "rur": "FTW",
+        "sessionid": "38279754149%3Aka1jEo2By4zWoq%3A26",
+        "shbid": "7292",
+        "shbts": "1600657655.6954184",
+    }
     a, b = PostDetailsHandler(link, cookie).crawl_post_details()
     print(a, b)

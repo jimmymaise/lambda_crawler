@@ -2,24 +2,27 @@
 Post handler for crawl user + post info from HTML
 """
 import re
+import socket
 from http import HTTPStatus
+
 import requests
 import socks
-import socket
-from stem import Signal
 from bs4 import BeautifulSoup
-from stem.control import Controller
-from core.constants.core_constant import CoreConst
-from core.utils.exceptions import PostNotFoundError
-import core.constants.base_facebook_constant as fb_constant
 from core.handlers.crawl_account_handler import CrawlAccountHandler
+from stem import Signal
+from stem.control import Controller
+
+import core.constants.base_facebook_constant as fb_constant
 import functions.social_networks.facebook.post_details.constants.post as post_const_module
 import functions.social_networks.facebook.post_details.constants.user as user_const_module
 import functions.social_networks.facebook.post_details.constants.video as video_const_module
+from core.constants.core_constant import CoreConst
+from core.utils.exceptions import PostNotFoundError
 
 
 class PostHandler:
     "Class for post collection with HTTP request"
+
     def __init__(self, post_url: str, account_info: dict, social_type):
         self.post_url = post_url
         self.account_info = account_info
@@ -29,8 +32,8 @@ class PostHandler:
         "Get details of post from HTML"
         headers = self.__generate_header_for_request()
         response_fields = fb_constant.LambdaResponseConst
-        social_user_type = response_fields.USER_FIELD\
-            if self.social_type == "facebook"\
+        social_user_type = response_fields.USER_FIELD \
+            if self.social_type == "facebook" \
             else response_fields.PAGE_FIELD
 
         # Parse post details via HTTP request
@@ -49,7 +52,7 @@ class PostHandler:
         post_info = self.__parse_post_info(response_data, cookie_status)
 
         result = {
-            social_user_type: profile_info, 
+            social_user_type: profile_info,
             response_fields.POST_FIELD: post_info
         }
         return result, response_code, HTTPStatus(response_code).description
@@ -88,12 +91,12 @@ class PostHandler:
 
     def __parse_profile_info(self, response_data: str, cookie_status: bool):
         """Get User/Page info base on cookie status"""
-        response_const = fb_constant.UserInfo if self.social_type == 'facebook'\
-                         else fb_constant.PageInfo
-                         
+        response_const = fb_constant.UserInfo if self.social_type == 'facebook' \
+            else fb_constant.PageInfo
+
         # Get regex str base on cookie status
-        user_const = user_const_module.UserLoginRegexStr if cookie_status\
-                     else user_const_module.UserNLoginRegexStr
+        user_const = user_const_module.UserLoginRegexStr if cookie_status \
+            else user_const_module.UserNLoginRegexStr
 
         # Get user info from response data
         list_username = re.findall(user_const.USERNAME, response_data)
@@ -101,10 +104,10 @@ class PostHandler:
         list_user_avatar = re.findall(user_const.USER_AVATAR, response_data)
         list_full_name = re.findall(user_const.FULL_NAME, response_data)
         profile_info = {
-            response_const.USERNAME: list_username[0] if list_username else "", 
-            response_const.USER_ID: int(list_user_id[0]) if list_user_id else 0, 
-            response_const.AVATAR: list_user_avatar[0].replace("amp;", "") if list_user_avatar else "", 
-            response_const.FULL_NAME: list_full_name[0] if list_full_name else "", 
+            response_const.USERNAME: list_username[0] if list_username else "",
+            response_const.USER_ID: int(list_user_id[0]) if list_user_id else 0,
+            response_const.AVATAR: list_user_avatar[0].replace("amp;", "") if list_user_avatar else "",
+            response_const.FULL_NAME: list_full_name[0] if list_full_name else "",
         }
         return profile_info
 
@@ -121,10 +124,10 @@ class PostHandler:
         else:
             response_const = post_const_module.ResponseFields
             regex_module = post_const_module
-        
-        post_const = regex_module.LoginRegexStr if cookie_status\
-                     else regex_module.NotLoginRegexStr
-        
+
+        post_const = regex_module.LoginRegexStr if cookie_status \
+            else regex_module.NotLoginRegexStr
+
         # Get post info from response data
         list_post_id = re.findall(post_const.POST_ID, response_data)
         post_id = int(list_post_id[0]) if list_post_id else None
@@ -137,7 +140,7 @@ class PostHandler:
         list_num_view = re.findall(post_const.VIEW_COUNT, response_data)
         list_timestamp = re.findall(post_const.TIMESTAMP, response_data)
         list_post_img = re.findall(post_const.POST_IMG, response_data)
-        
+
         content_obj = soup_obj.find(post_const.CONTENT_TAG, post_const.CONTENT_IDS)
         list_feedback = re.findall(post_const.FEEDBACK_ID, response_data)
         if list_feedback and "feedbackTargetID" in list_feedback[0]:
@@ -145,15 +148,15 @@ class PostHandler:
         # Remove empty element from list
         list_post_img = [img_url for img_url in list_post_img if img_url]
         post_info = {
-            response_const.NUM_REACTION: int(list_num_reaction[0]) if list_num_reaction else 0, 
-            response_const.NUM_COMMENT: int(list_num_comment[0]) if list_num_comment else 0, 
-            response_const.NUM_SHARE: int(list_num_share[0]) if list_num_share else 0, 
-            response_const.VIEW_COUNT: int(list_num_view[0]) if list_num_view else 0, 
-            response_const.POST_ID: int(list_post_id[0]) if list_post_id else None, 
-            response_const.FEEDBACK_ID: list_feedback[0] if list_feedback else "", 
-            response_const.TIMESTAMP: int(list_timestamp[0]) if list_timestamp else None, 
-            response_const.POST_IMG: list_post_img[0].replace("amp;", "") if list_post_img else "", 
-            response_const.CONTENT: content_obj.text if content_obj else "", 
+            response_const.NUM_REACTION: int(list_num_reaction[0]) if list_num_reaction else 0,
+            response_const.NUM_COMMENT: int(list_num_comment[0]) if list_num_comment else 0,
+            response_const.NUM_SHARE: int(list_num_share[0]) if list_num_share else 0,
+            response_const.VIEW_COUNT: int(list_num_view[0]) if list_num_view else 0,
+            response_const.POST_ID: int(list_post_id[0]) if list_post_id else None,
+            response_const.FEEDBACK_ID: list_feedback[0] if list_feedback else "",
+            response_const.TIMESTAMP: int(list_timestamp[0]) if list_timestamp else None,
+            response_const.POST_IMG: list_post_img[0].replace("amp;", "") if list_post_img else "",
+            response_const.CONTENT: content_obj.text if content_obj else "",
         }
         return post_info
 
@@ -171,10 +174,10 @@ class PostHandler:
             controller.authenticate(fb_constant.TOR_PASSWORD)
             socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, fb_constant.TOR_SERVER, fb_constant.TOR_DEFAULT_PORT)
             socket.socket = socks.socksocket
-            response_obj = requests.get(url = self.post_url, headers = headers)
+            response_obj = requests.get(url=self.post_url, headers=headers)
             while fb_constant.LOGIN_URL_SYNTAX in response_obj.url:
                 controller.signal(Signal.NEWNYM)
-                response_obj = requests.get(url = self.post_url, headers = headers)
+                response_obj = requests.get(url=self.post_url, headers=headers)
         response_data = response_obj.text
         response_code = HTTPStatus.OK.value
         return response_data, response_code
@@ -183,7 +186,7 @@ class PostHandler:
         """Collect post detail (HTML) by AWS Lambda"""
         response_data = ""
         try:
-            response_obj = requests.get(url = self.post_url, headers = headers)
+            response_obj = requests.get(url=self.post_url, headers=headers)
         except requests.ConnectTimeout:
             response_code = HTTPStatus.REQUEST_TIMEOUT.value
         else:

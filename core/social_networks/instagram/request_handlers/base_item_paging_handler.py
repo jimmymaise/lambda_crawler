@@ -1,9 +1,11 @@
-from http import HTTPStatus
 from abc import ABCMeta, abstractmethod
+from http import HTTPStatus
+
 import requests
-from core.utils.common import Common
-from core.social_networks.instagram.schemas.base_item_paging_response import ResponsePagingItemSchema
+
 from core.constants.base_instagram_constant import LambdaResponseConst, IGResponseConst, DEFAULT_HEADER
+from core.social_networks.instagram.schemas.base_item_paging_response import ResponsePagingItemSchema
+from core.utils.common import Common
 
 
 class BaseItemPagingHandler(object, metaclass=ABCMeta):
@@ -24,8 +26,8 @@ class BaseItemPagingHandler(object, metaclass=ABCMeta):
         resource_response_dict = Common.get_dict_data_by_path(request_res, self.res_key_path_to_item_list)
         page_info = resource_response_dict[IGResponseConst.PAGE_INFO]
         return {
-                IGResponseConst.HAS_NEXT_PAGE: page_info[IGResponseConst.HAS_NEXT_PAGE],
-                IGResponseConst.CURSOR: page_info[IGResponseConst.END_CURSOR],
+            IGResponseConst.HAS_NEXT_PAGE: page_info[IGResponseConst.HAS_NEXT_PAGE],
+            IGResponseConst.CURSOR: page_info[IGResponseConst.END_CURSOR],
         }
 
     @staticmethod

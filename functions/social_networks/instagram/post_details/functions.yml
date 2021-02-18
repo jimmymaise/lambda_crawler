@@ -1,62 +1,62 @@
 ig-post-details:
-    name: ${self:provider.stage}-${self:service}
-    handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
-    description: "Instagram - Get details of post (user + post info)"
-    runtime: python3.8
-    memorySize: 128
-    timeout: 30
-    events:
-        - http:
-            method: post
-            path: /post-details
-            integration: lambda
-            request:
-                template:
-                    application/x-www-form-urlencoded: null
-                    application/json: |
-                        #set($inputRoot = $input.path('$'))
-                        $input.json("$")
-            response:
-                template: $input.path('$')
-                statusCodes:
-                    400:
-                        pattern: ".*is invalid.*|.*required field.*" # Error response regex
-                        template:
-                            application/json: |
-                                #set($inputRoot = $input.path('$'))
-                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
-                                {
-                                    "message" : "$errorMessageObj.type",
-                                    "description": "$errorMessageObj.message",
-                                }
-                    404:
-                        pattern: "Post not found" # Error response regex
-                        template:
-                            application/json: |
-                                #set($inputRoot = $input.path('$'))
-                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
-                                {
-                                    "message" : "$errorMessageObj.type",
-                                    "description": "$errorMessageObj.message",
-                                }
-                    429:
-                        pattern: "Cookie is expired" # Error response regex
-                        template:
-                            application/json: |
-                                #set($inputRoot = $input.path('$'))
-                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
-                                {
-                                    "message" : "$errorMessageObj.type",
-                                    "description": "$errorMessageObj.message",
-                                }
-                    500:
-                        pattern: .*"isError"\s*:\s*true.*
-                        template:
-                            application/json: |
-                                #set($inputRoot = $input.path('$'))
-                                #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
-                                {
-                                    "message" : "$errorMessageObj.type",
-                                    "description": "$errorMessageObj.message",
-                                }
+  name: ${self:provider.stage}-${self:service}
+  handler: ${self:custom.externalConfigurations.relative_function_path}/function_step_scripts/main_step.lambda_handler
+  description: "Instagram - Get details of post (user + post info)"
+  runtime: python3.8
+  memorySize: 128
+  timeout: 30
+  events:
+    - http:
+        method: post
+        path: /post-details
+        integration: lambda
+        request:
+          template:
+            application/x-www-form-urlencoded: null
+            application/json: |
+              #set($inputRoot = $input.path('$'))
+              $input.json("$")
+        response:
+          template: $input.path('$')
+          statusCodes:
+            400:
+              pattern: ".*is invalid.*|.*required field.*" # Error response regex
+              template:
+                application/json: |
+                  #set($inputRoot = $input.path('$'))
+                  #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                  {
+                      "message" : "$errorMessageObj.type",
+                      "description": "$errorMessageObj.message",
+                  }
+            404:
+              pattern: "Post not found" # Error response regex
+              template:
+                application/json: |
+                  #set($inputRoot = $input.path('$'))
+                  #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                  {
+                      "message" : "$errorMessageObj.type",
+                      "description": "$errorMessageObj.message",
+                  }
+            429:
+              pattern: "Cookie is expired" # Error response regex
+              template:
+                application/json: |
+                  #set($inputRoot = $input.path('$'))
+                  #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                  {
+                      "message" : "$errorMessageObj.type",
+                      "description": "$errorMessageObj.message",
+                  }
+            500:
+              pattern: .*"isError"\s*:\s*true.*
+              template:
+                application/json: |
+                  #set($inputRoot = $input.path('$'))
+                  #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))
+                  {
+                      "message" : "$errorMessageObj.type",
+                      "description": "$errorMessageObj.message",
+                  }
 

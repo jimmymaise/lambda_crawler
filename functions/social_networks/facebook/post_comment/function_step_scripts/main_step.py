@@ -7,18 +7,19 @@ except ImportError:
     pass
 import traceback
 from pathlib import Path
-from core.utils.exceptions import ErrorSocialType
+
 import core.constants.base_facebook_constant as fb_constant
+from core.utils.exceptions import ErrorSocialType
 from functions.social_networks.facebook.post_comment.config_logging.config_handler import Config
 from functions.social_networks.facebook.post_comment.request_handlers.graph_api_handler import GraphApiHandler
 from functions.social_networks.facebook.post_comment.request_handlers.graphql_api_handler import GraphQLHandler
-
 
 function_path = str(Path(__file__).resolve().parents[1])
 
 
 class MainStep:
     """Class for parsing post info"""
+
     def __init__(self, event, context):
         self.post_app_id = event.get('post_app_id')
         self.social_type = event.get('social_type')
@@ -38,9 +39,9 @@ class MainStep:
 
         # Check 'post_app_id' type: If it it is invalid, raise Error and stop process
         if isinstance(self.post_app_id, str):
-            collection_handler = GraphApiHandler(self.post_app_id, self.account_info)\
-                                 if self.social_type == 'facebook_page'\
-                                 else GraphQLHandler(self.post_app_id)
+            collection_handler = GraphApiHandler(self.post_app_id, self.account_info) \
+                if self.social_type == 'facebook_page' \
+                else GraphQLHandler(self.post_app_id)
             list_comment, paging = collection_handler.get_comments(next_cursor=self.cursor)
             response_obj[response_const.DATA_FIELD] = list_comment
             response_obj[response_const.PAGING_FIELD] = paging
@@ -55,7 +56,6 @@ def lambda_handler(event, context):
         return MainStep(event, context).crawl_post_details()
     except Exception:
         raise RuntimeError(f"Error: {traceback.format_exc()}")
-
 
 
 if __name__ == "__main__":

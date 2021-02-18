@@ -32,7 +32,7 @@ class ResponseFields:
     POST_TYPE = "post_type"
     NUM_LIKE = "num_like"
     NUM_COMMENT = "num_comment"
-    NUM_VIEW = "video_view_count"     # only for video
+    NUM_VIEW = "video_view_count"  # only for video
     CREATED_TIME = "taken_at_timestamp"
     CONTENT = "content"
     USER_ID = "user_id"

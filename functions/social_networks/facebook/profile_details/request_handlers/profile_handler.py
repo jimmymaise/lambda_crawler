@@ -3,14 +3,17 @@ Post handler for crawl "user" info from HTML
 """
 import re
 from http import HTTPStatus
-import requests
-import core.constants.base_facebook_constant as fb_constant
-import functions.social_networks.facebook.profile_details.constants.user as user_const_module
+
 import functions.social_networks.facebook.profile_details.constants.page as page_const_module
+import functions.social_networks.facebook.profile_details.constants.user as user_const_module
+import requests
+
+import core.constants.base_facebook_constant as fb_constant
 
 
 class ProfileHandler:
     "Class for post request"
+
     def __init__(self, post_url: str, cookies_str: str, user_type: str):
         self.post_url = post_url
         self.cookies_str = cookies_str

@@ -34,7 +34,6 @@ class LambdaResponseConst:
     POST_FIELD = "post"
     PAGING_FIELD = "paging"
 
-    
 
 class PostInfo:
     """Class for post info"""

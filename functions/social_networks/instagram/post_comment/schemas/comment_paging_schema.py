@@ -22,6 +22,7 @@ class PagingCommentRequestOptionsSchema(Schema):
 
 class AccountInfoSchema(Schema):
     """Schema of account info"""
+
     class Meta:
         unknown = EXCLUDE
 
@@ -32,6 +33,7 @@ class AccountInfoSchema(Schema):
 
 class IGCommentPaginateRequestSchema(Schema):
     """Schema of request param"""
+
     class Meta:
         unknown = EXCLUDE
 
@@ -43,6 +45,7 @@ class IGCommentPaginateRequestSchema(Schema):
 
 class CommentResponseSchema(Schema):
     """Schema of comment param"""
+
     class Meta:
         unknown = EXCLUDE
 
@@ -57,6 +60,7 @@ class CommentResponseSchema(Schema):
 
 class UserResponseSchema(Schema):
     """Schema of user param"""
+
     class Meta:
         unknown = EXCLUDE
 
@@ -68,6 +72,7 @@ class UserResponseSchema(Schema):
 
 class PostCommentSchema(Schema):
     """Schema for post comment response"""
+
     class Meta:
         unknown = EXCLUDE
 
@@ -77,6 +82,7 @@ class PostCommentSchema(Schema):
 
 class IGPostCommentResponseSchema(Schema):
     """Schema of response data to API Gateway"""
+
     class Meta:
         unknown = EXCLUDE
 
