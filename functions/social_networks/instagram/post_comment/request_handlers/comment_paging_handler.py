@@ -1,13 +1,15 @@
 import json
 from http import HTTPStatus
+
 import requests
-from core.utils.common import Common, update_account_status
+
+from core.constants.base_instagram_constant import LambdaResponseConst, IGResponseConst, UserResponseConst, \
+    CmtResponseConst
 from core.social_networks.instagram.request_handlers.base_item_paging_handler import BaseItemPagingHandler
+from core.utils.common import Common, update_account_status
 from functions.social_networks.instagram.post_comment.constants.comment import CommentConst
-from functions.social_networks.instagram.post_comment.schemas.comment_paging_schema import IGPostCommentResponseSchema,\
-                                                                                           PostCommentSchema
-from core.constants.base_instagram_constant import LambdaResponseConst, IGResponseConst, UserResponseConst,\
-                                                   CmtResponseConst
+from functions.social_networks.instagram.post_comment.schemas.comment_paging_schema import IGPostCommentResponseSchema, \
+    PostCommentSchema
 
 
 class CommentPagingHandler(BaseItemPagingHandler):
@@ -24,15 +26,15 @@ class CommentPagingHandler(BaseItemPagingHandler):
 
     def get_request_url(self, url_options):
         """Generate URL to request and get comment"""
-        request_url = self.base_url % url_options['query_hash'] +\
-                      '{"shortcode":"%s","first":%s,"after":%s}'\
+        request_url = self.base_url % url_options['query_hash'] + \
+                      '{"shortcode":"%s","first":%s,"after":%s}' \
                       % (url_options['shortcode'], url_options['num_item'], json.dumps(url_options['cursor']))
         return request_url
 
     def get_request_url_for_reply(self, url_options):
         """Generate URL to request and get reply comment"""
-        request_url = self.base_url % url_options.get('reply_query_hash', CommentConst.REPLY_QUERY_HASH) +\
-                      '{"comment_id":"%s","first":%s,"after":%s}'\
+        request_url = self.base_url % url_options.get('reply_query_hash', CommentConst.REPLY_QUERY_HASH) + \
+                      '{"comment_id":"%s","first":%s,"after":%s}' \
                       % (url_options['comment_id'], url_options['num_item'], json.dumps(url_options['reply_cursor']))
         return request_url
 
@@ -101,8 +103,8 @@ class CommentPagingHandler(BaseItemPagingHandler):
                         parent_id=int(raw_data[CommentConst.COMMENT_ID])
                     )
             else:
-                self.url_options['reply_cursor'] = raw_data[CommentConst.COMMENT_THREAD][IGResponseConst.PAGE_INFO]\
-                                                   .get(IGResponseConst.END_CURSOR)
+                self.url_options['reply_cursor'] = raw_data[CommentConst.COMMENT_THREAD][IGResponseConst.PAGE_INFO] \
+                    .get(IGResponseConst.END_CURSOR)
                 self._get_reply_comment(parent_id=int(raw_data[CommentConst.COMMENT_ID]))
         if isinstance(parent_id, int):
             response_data[LambdaResponseConst.CMT_FIELD][CmtResponseConst.PARENT_CMT_ID] = parent_id

@@ -9,10 +9,10 @@ class AccountInfoSchema(Schema):
 class RequestSchema(Schema):
     class Meta:
         unknown = EXCLUDE
+
     link = fields.Str(required=True, allow_none=False)
     account_info = fields.Nested(
         AccountInfoSchema,
         required=True,
         allow_none=False
     )
-

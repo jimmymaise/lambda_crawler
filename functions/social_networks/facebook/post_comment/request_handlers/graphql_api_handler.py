@@ -1,20 +1,23 @@
 import json
 import re
+import socket
 import time
 from datetime import datetime
+
 import requests
 import socks
-import socket
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 from stem import Signal
 from stem.control import Controller
+
 import core.constants.base_facebook_constant as fb_const
 import functions.social_networks.facebook.post_comment.constants.comment as cmt_const
-from requests_toolbelt.multipart.encoder import MultipartEncoder
 from core.utils.exceptions import ErrorRequestFormat
 
 
 class GraphQLHandler:
     """Class for comment collection via FB GraphQL API"""
+
     def __init__(self, post_app_id: str, **kwargs):
         self.post_id = self._get_post_id(post_app_id)
         self.list_comment = []
@@ -91,13 +94,13 @@ class GraphQLHandler:
         parsed_cmt['comment']['created_time'] = str(datetime.fromtimestamp(cmt.get('created_time', 0)))
         parsed_cmt['comment']['taken_at_timestamp'] = cmt.get('created_time', 0)
         parsed_cmt['comment']['message'] = cmt['body'].get("text") if cmt.get('body') else ""
-        parsed_cmt['comment']['num_reaction'] = cmt['feedback']['reactors'].get("count")\
-                                                if cmt.get('feedback') else 0
+        parsed_cmt['comment']['num_reaction'] = cmt['feedback']['reactors'].get("count") \
+            if cmt.get('feedback') else 0
         # Get sticker if have
         if cmt.get('attachments'):
-            parsed_cmt['comment']['sticker'] = cmt['attachments'][0]['sticker']['sticker_image'].get("uri")\
-                                                if cmt['attachments'][0]['sticker'].get('sticker_image')\
-                                                else ""
+            parsed_cmt['comment']['sticker'] = cmt['attachments'][0]['sticker']['sticker_image'].get("uri") \
+                if cmt['attachments'][0]['sticker'].get('sticker_image') \
+                else ""
         # Get 'parent id' if have
         if cmt.get('parent_id'):
             parsed_cmt['comment']['parent_comment_id'] = cmt.get('parent_id')
@@ -115,8 +118,8 @@ class GraphQLHandler:
             parsed_cmt[user_type]["avatar"] = cmt['author']['profile_picture_depth_0'].get('uri')
             page_url = cmt['author']['url'] if cmt['author'].get('url') else cmt['author']['id']
             username = re.findall(r"https://www.facebook.com/(\S+)", page_url)
-            parsed_cmt[user_type]['username'] = username[0] if username and\
-                                                               ('-' not in username or 'people' not in username)\
-                                                            else str(cmt['author']['id'])
+            parsed_cmt[user_type]['username'] = username[0] if username and \
+                                                               ('-' not in username or 'people' not in username) \
+                else str(cmt['author']['id'])
         list_reply = cmt['feedback'].get('display_comments', [])
         return parsed_cmt, list_reply

@@ -1,6 +1,8 @@
 """
 Class for get Post details info
 """
+
+
 class LoginRegexStr:
     "Regex var for Post with login"
     NUM_REACTION = r"subscription\_target\_id\:\"%d\".*reaction\_count\:\{count\:(\d+)\}"

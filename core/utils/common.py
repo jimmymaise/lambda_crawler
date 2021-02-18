@@ -2,7 +2,7 @@ import requests
 
 
 def update_account_status(social_network: str, account_id: str,
-                          status_code: int, message: str=None):
+                          status_code: int, message: str = None):
     """Update status after collection process is Done"""
     payload = {
         "api_type": "UPDATE_STATUS",
@@ -36,4 +36,3 @@ class Common:
             f(*args, **kwargs)
         except Exception as e:
             print("we have a problem: {0}".format(e))
-

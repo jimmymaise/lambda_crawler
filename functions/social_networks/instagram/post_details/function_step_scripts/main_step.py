@@ -1,4 +1,5 @@
 import json
+
 try:
     import unzip_requirements
 except ImportError:
@@ -14,6 +15,7 @@ function_path = str(Path(__file__).resolve().parents[1])
 
 class MainStep:
     logger = logging.getLogger()
+
     def __init__(self, event, context):
         self.link = event.get('link')
         self.account_info = event['account_info']
@@ -21,7 +23,6 @@ class MainStep:
         self.logger = logging.getLogger()
 
     def crawl_post_details(self):
-
         response_data = LambdaResponseConst.RESPONSE_FORMAT
         post_info, user_info = PostDetailsHandler(
             post_link=self.link,
@@ -56,26 +57,28 @@ def lambda_handler(event, context):
 class ClientException(Exception):
     pass
 
+
 class LambdaException(Exception):
     pass
+
 
 if __name__ == '__main__':
     # Just for testing. Remove it
     event_test = {
-	"link": "https://www.instagram.com/p/CJ5LCqOFU0u/?utm_source=ig_web_copy_link",
-	"account_info": {
-		"info": {
-			"csrftoken": "ped8nryXbMBmLRizll9xUkgD6isUeqlS",
-			"ds_user_id": "38279754149",
-			"ig_did": "B9FD105A-AA05-4906-AF67-0128EB61B617",
-			"mid": "X2gY7QALAAEl58BKpeW7L1jNb7Dw",
-			"rur": "FTW",
-			"sessionid": "38279754149%3Aka1jEo2By4zWoq%3A26",
-			"shbid": "7292",
-			"shbts": "1600657655.6954184"
-		},
-		"account_id": "123124"
-	}
-}
+        "link": "https://www.instagram.com/p/CJ5LCqOFU0u/?utm_source=ig_web_copy_link",
+        "account_info": {
+            "info": {
+                "csrftoken": "ped8nryXbMBmLRizll9xUkgD6isUeqlS",
+                "ds_user_id": "38279754149",
+                "ig_did": "B9FD105A-AA05-4906-AF67-0128EB61B617",
+                "mid": "X2gY7QALAAEl58BKpeW7L1jNb7Dw",
+                "rur": "FTW",
+                "sessionid": "38279754149%3Aka1jEo2By4zWoq%3A26",
+                "shbid": "7292",
+                "shbts": "1600657655.6954184"
+            },
+            "account_id": "123124"
+        }
+    }
     response = lambda_handler(event=event_test, context=None)
     print(json.dumps(response))
