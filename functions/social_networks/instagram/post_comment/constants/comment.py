@@ -1,16 +1,9 @@
-from core.constants.base_instagram_constant import IGBaseURLConstant
-
-
 class CommentConst:
     CONST_CONFIG_FILE_PATH = 'config/config.json'
-
-    # URLs
-    COMMENT_URL_NO_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{{"shortcode":"{shortcode}","first":{num_item}}}'
-    COMMENT_URL_WITH_CURSOR = IGBaseURLConstant.BASE_INSTAGRAM_PAGING_URL + '{"shortcode":"%s",' +\
-                                                                            '"first":%s,' + \
-                                                                            '"after":"%s"}'
     COMMENT_DATA_RESPONSE_KEY_PATH = ['data', 'shortcode_media', 'edge_media_to_parent_comment']
+    COMMENT_REPLY_RESPONSE_KEY_PATH = ['data', 'comment', 'edge_threaded_comments']
     COMMENT_RESOURCE_TYPE = 'COMMENT'
+    REPLY_QUERY_HASH = "1ee91c32fc020d44158a3192eda98247"
     ACCOUNT = "account_info"
     ACCOUNT_ID = "account_id"
     COOKIE_FIELD = "info"
