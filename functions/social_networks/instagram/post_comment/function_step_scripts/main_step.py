@@ -49,15 +49,28 @@ def lambda_handler(event, context):
 
 if __name__ == '__main__':
     # Just for testing. Remove it
-    event_test = {"data_fields": {"shortcode": 'CEiuPKTF9cA',
-                                  "cursor": "QVFEam9QUnIxbjNtREN4TTFkSEJsbXVaR3lodENGX2ozT3dxazVSSHdWMmZ5Q1VJaFRlbW1wTjFlLVlQNzhNS29TbTBjd1c2WkNpM3JHV3laRjBfeUdjbA==",
-                                  "num_item": 15,
-                                  "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5"
-                                  },
-                  "cookies": {"csrftoken": "nWQDjZR15gg18NDkMYo64DOo9TIiE6uq", "ds_user_id": "4026520510",
-                              "ig_did": "590E4533-964D-48E4-8EB1-A57F83508AFB", "mid": "XpU29wALAAGyV7cDF8TSJ7z_3R6I",
-                              "rur": "FRC", "sessionid": "4026520510%3AQ7ZQdKMJFVdHSi%3A23", "shbid": "14922",
-                              "urlgen": "{'115.78.0.111': 7552}:1jiXX6:Fyopguky-ncqo3WyxfM-6S3O8YU"}}
+    event_test = {
+        "shortcode": "CKkpGpql4bk",
+        "num_item": 50,
+        "social_type": "instagram",
+        "account_info": {
+            "account_id": "accountID_001",
+            "query_hash": "bc3296d1ce80a24b1b6e40b1e72903f5",
+            "info": {
+                "csrftoken": "yvkUNvit4ykNTUqjtDNuYTHVsODBy8pT",
+                "datr": "3Wo_Xw2nKCBXzdsCXJspwrnz",
+                "ds_user_id": "4026520510",
+                "ig_cb": "1",
+                "ig_did": "7ECD68B5-8FD8-48D3-AAEA-E2A73A30E568",
+                "mid": "XEiL-gALAAH50f_Tc7Kyv0tMXM5C",
+                "rur": "FRC",
+                "sessionid": "4026520510%3AvrZU5wdcPUkHOZ%3A17",
+                "shbid": "14922",
+                "shbts": "1610507777.3079073"
+            }
+        },
+        "cursor": None
+    }
 
     response = lambda_handler(event=event_test, context=None)
     import json
